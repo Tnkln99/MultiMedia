@@ -28,6 +28,9 @@
 #include "src/Vec3.h"
 #include "src/Camera.h"
 
+int nX = 50;
+int nY = 50;
+
 enum DisplayMode{ WIRE=0, SOLID=1, LIGHTED_WIRE=2, LIGHTED=3 };
 
 struct Triangle {
@@ -83,10 +86,38 @@ static int lastX=0, lastY=0, lastZoom=0;
 static bool fullScreen = false;
 
 //To complete
-void setUnitSphere( Mesh & o_mesh, int nX=20, int nY=20 )
+void setUnitSphere( Mesh & o_mesh, int nX = 20, int nY=20 )
 {
-    
+    o_mesh.vertices.clear();
+    o_mesh.triangles.clear();
 
+    float deltaTeta = 2*M_PI / (float)nX;
+    float deltaPhi = M_PI / (float)nY;
+
+    const Vec3 poleNord = Vec3(0, 0, -1);
+    const Vec3 poleSud = Vec3(0, 0, 1);
+
+    for(int i=0; i < nX; i++){
+        for(int j=0; j < nY; j++){
+            float teta = deltaTeta * i;
+            float phi = deltaPhi * j - M_PI/2;
+
+            o_mesh.vertices.push_back(Vec3(std::cos(teta)*std::cos(phi), std::sin(teta)*std::cos(phi), std::sin(phi)));
+        }
+    }
+
+    for(int i=0; i < nX ; i++){
+        for(int j=0; j < nY-1; j++){
+            if(i == nY -1){
+                o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, j));
+                o_mesh.triangles.push_back(Triangle(j+1, j, i*nY+j+1));
+            }else{
+                o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, (i+1)*nY+j));
+                o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
+            }
+            
+        }
+    }
 }
 
 
@@ -419,6 +450,18 @@ void key (unsigned char keyPressed, int x, int y) {
         display_unit_sphere = !display_unit_sphere;
         break;
 
+    case '-':
+        nY--;
+        nX--;
+        setUnitSphere( unit_sphere , nX, nY);
+        break;
+
+    case '+':
+        nY++;
+        nX++;
+        setUnitSphere( unit_sphere , nX, nY);
+        break;
+
     default:
         break;
     }
@@ -500,7 +543,7 @@ int main (int argc, char ** argv) {
     //Uncomment to see other meshes
     //openOFF("data/elephant_n.off", mesh.vertices, mesh.normals, mesh.triangles);
 
-    setUnitSphere( unit_sphere );
+    setUnitSphere( unit_sphere , nX, nY);
 
     glutMainLoop ();
     return EXIT_SUCCESS;
