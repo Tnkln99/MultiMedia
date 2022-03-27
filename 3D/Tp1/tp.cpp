@@ -31,6 +31,8 @@
 int nX = 50;
 int nY = 50;
 
+int cpt = 0;
+
 enum DisplayMode{ WIRE=0, SOLID=1, LIGHTED_WIRE=2, LIGHTED=3 };
 
 struct Triangle {
@@ -65,10 +67,12 @@ Mesh mesh;
 
 //Mesh to generate
 Mesh unit_sphere;
+Mesh unit_cube;
 
 bool display_normals;
 bool display_loaded_mesh;
 bool display_unit_sphere;
+bool display_unit_cube;
 DisplayMode displayMode;
 
 // -------------------------------------------
@@ -90,12 +94,13 @@ void setUnitSphere( Mesh & o_mesh, int nX = 20, int nY=20 )
 {
     o_mesh.vertices.clear();
     o_mesh.triangles.clear();
+    o_mesh.normals.clear();
 
     float deltaTeta = 2*M_PI / (float)nX;
     float deltaPhi = M_PI / (float)nY;
 
-    const Vec3 poleNord = Vec3(0, 0, -1);
-    const Vec3 poleSud = Vec3(0, 0, 1);
+
+    
 
     for(int i=0; i < nX; i++){
         for(int j=0; j < nY; j++){
@@ -103,6 +108,7 @@ void setUnitSphere( Mesh & o_mesh, int nX = 20, int nY=20 )
             float phi = deltaPhi * j - M_PI/2;
 
             o_mesh.vertices.push_back(Vec3(std::cos(teta)*std::cos(phi), std::sin(teta)*std::cos(phi), std::sin(phi)));
+            o_mesh.normals.push_back(Vec3(std::cos(teta)*std::cos(phi), std::sin(teta)*std::cos(phi), std::sin(phi)));
         }
     }
 
@@ -118,6 +124,57 @@ void setUnitSphere( Mesh & o_mesh, int nX = 20, int nY=20 )
             
         }
     }
+}
+
+void setUnitCube( Mesh & o_mesh, int nX = 20, int nY=20 )
+{
+    o_mesh.vertices.clear();
+    //o_mesh.triangles.clear();
+    //o_mesh.normals.clear();
+    
+    // pour x = 0 
+    for(int i = 0; i < nX; i ++){
+        for(int j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(0,i,j));
+        }
+    }
+
+    // pour x = nX
+    for(int i = 0; i < nX; i ++){
+        for(int j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(nX,i,j));
+        }
+    }
+
+    //pour y = 0
+
+    for(int i = 0; i < nX; i ++){
+        for(int j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(i,0,j));
+        }
+    }
+
+    //pour y = Nx
+
+    for(int i = 0; i < nX; i ++){
+        for(int j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(i,nX,j));
+        }
+    }
+
+    // pour z = 0 
+    for(int i = 0; i < nX; i ++){
+        for(int j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(i,j,0));
+        }
+    }
+    // pour z = nX
+    for(int i = 0; i < nX; i ++){
+        for(int j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(i,j,nX));
+        }
+    }
+
 }
 
 
@@ -257,6 +314,8 @@ void init () {
     displayMode = LIGHTED;
     display_normals = false;
     display_unit_sphere = false;
+    display_unit_cube = false;
+
     display_loaded_mesh = true;
 
     glLineWidth(1.);
@@ -370,6 +429,11 @@ void draw () {
         drawTriangleMesh(unit_sphere);
     }
 
+    if ( display_unit_cube){
+        glColor3f(0.8,1,0.8);
+        drawTriangleMesh(unit_cube);
+    }
+
     if( display_loaded_mesh ){
         glColor3f(0.8,0.8,1);
         drawTriangleMesh(mesh);
@@ -446,8 +510,12 @@ void key (unsigned char keyPressed, int x, int y) {
         display_loaded_mesh = !display_loaded_mesh;
         break;
 
-    case '2': //Toggle unit sphere mesh display
-        display_unit_sphere = !display_unit_sphere;
+    case 'c': //Toggle unit sphere mesh display
+        if(cpt % 2 == 0)
+            display_unit_sphere = !display_unit_sphere;
+        else
+            display_unit_cube = !display_unit_cube;
+        cpt++;
         break;
 
     case '-':
@@ -542,8 +610,8 @@ int main (int argc, char ** argv) {
 
     //Uncomment to see other meshes
     //openOFF("data/elephant_n.off", mesh.vertices, mesh.normals, mesh.triangles);
-
     setUnitSphere( unit_sphere , nX, nY);
+    setUnitCube( unit_cube, nX, nY);
 
     glutMainLoop ();
     return EXIT_SUCCESS;
