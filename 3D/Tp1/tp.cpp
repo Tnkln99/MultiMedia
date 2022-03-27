@@ -133,45 +133,89 @@ void setUnitCube( Mesh & o_mesh, int nX = 20, int nY=20 )
     //o_mesh.normals.clear();
     
     // pour x = 0 
-    for(int i = 0; i < nX; i ++){
-        for(int j = 0; j < nX; j ++){
-            o_mesh.vertices.push_back(Vec3(0,i,j));
+    for(float i = 0; i < nX; i ++){
+        for(float j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(0,i/nX,j/nX));
         }
     }
 
-    // pour x = nX
-    for(int i = 0; i < nX; i ++){
-        for(int j = 0; j < nX; j ++){
-            o_mesh.vertices.push_back(Vec3(nX,i,j));
+    //triangles pour cete face
+    for(float i = 0; i < nX-1; i ++){
+        for(float j = 0; j < nX; j ++){
+            o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, (i+1)*nY+j));
+            o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
+        }
+    }
+    
+    // pour z = 0 
+    for(float i = 0; i < nX; i ++){
+        for(float j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(i/nX,j/nX,0));
         }
     }
 
-    //pour y = 0
+    //triangles pour cette face
+    for(float i = nX-1; i < nX-1 + nX; i ++){
+        for(float j = nX; j < 2*nX; j ++){
+            o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, (i+1)*nY+j));
+            o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
+        }
+    }
 
-    for(int i = 0; i < nX; i ++){
-        for(int j = 0; j < nX; j ++){
-            o_mesh.vertices.push_back(Vec3(i,0,j));
+    // pour z = nX
+    for(float i = 0; i < nX; i ++){
+        for(float j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(i/nX,j/nX,1));
+        }
+    }
+
+
+    for(float i = nX-1 + nX; i < nX-1 + 2*nX; i ++){
+        for(float j = 2*nX; j < 3*nX; j ++){
+            o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, (i+1)*nY+j));
+            o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
         }
     }
 
     //pour y = Nx
-
-    for(int i = 0; i < nX; i ++){
-        for(int j = 0; j < nX; j ++){
-            o_mesh.vertices.push_back(Vec3(i,nX,j));
+    for(float i = 0; i < nX; i ++){
+        for(float j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(i/nX,1,j/nX));
         }
     }
 
-    // pour z = 0 
-    for(int i = 0; i < nX; i ++){
-        for(int j = 0; j < nX; j ++){
-            o_mesh.vertices.push_back(Vec3(i,j,0));
+    for(float i = nX-1 + 2*nX; i < nX-1 + 3*nX; i ++){
+        for(float j = 3*nX; j < 4*nX; j ++){
+            o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, (i+1)*nY+j));
+            o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
         }
     }
-    // pour z = nX
-    for(int i = 0; i < nX; i ++){
-        for(int j = 0; j < nX; j ++){
-            o_mesh.vertices.push_back(Vec3(i,j,nX));
+
+    //pour y = 0
+    for(float i = 0; i < nX; i ++){
+        for(float j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(i/nX,0,j/nX));
+        }
+    }
+
+    for(float i = nX-1 + 3*nX; i < nX-1 + 4*nX; i ++){
+        for(float j = 4*nX; j < 5*nX; j ++){
+            o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, (i+1)*nY+j));
+            o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
+        }
+    }
+
+    // pour x = nX
+    for(float i = 0; i < nX; i ++){
+        for(float j = 0; j < nX; j ++){
+            o_mesh.vertices.push_back(Vec3(1,i/nX,j/nX));
+        }
+    }
+
+    for(float i = nX-1 + 4*nX; i < nX-1 + 5*nX; i ++){
+        for(float j = 5*nX; j < 6*nX; j ++){
+            o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, (i+1)*nY+j));
+            o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
         }
     }
 
@@ -511,8 +555,9 @@ void key (unsigned char keyPressed, int x, int y) {
         break;
 
     case 'c': //Toggle unit sphere mesh display
-        if(cpt % 2 == 0)
+        if(cpt % 2 == 0){
             display_unit_sphere = !display_unit_sphere;
+        }
         else
             display_unit_cube = !display_unit_cube;
         cpt++;
@@ -522,12 +567,14 @@ void key (unsigned char keyPressed, int x, int y) {
         nY--;
         nX--;
         setUnitSphere( unit_sphere , nX, nY);
+        setUnitCube( unit_cube, nX, nY);
         break;
 
     case '+':
         nY++;
         nX++;
         setUnitSphere( unit_sphere , nX, nY);
+        setUnitCube( unit_cube, nX, nY);
         break;
 
     default:
