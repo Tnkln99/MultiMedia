@@ -206,10 +206,17 @@ void setUnitTore( Mesh & o_mesh, int nX = 50, int nY= 50 ){
         }
     }
 
-    for(int i = 1; i < nX; i++){
+    for(int i = 0; i < nX; i++){
         for(int j = 0; j < nY; j++){
-            o_mesh.triangles.push_back(Triangle(i*nX+j,i*nX+j+1,(i-1)*nX+j));
-            o_mesh.triangles.push_back(Triangle((i-1)*nX+j,i*nX+j+1,(i-1)*nX+j+1));
+            if(i == nY - 1){
+                o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, j));
+                o_mesh.triangles.push_back(Triangle(j+1, j, i*nY+j+1));
+            }else{
+                o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, (i+1)*nY+j));
+                o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
+            }
+            /*o_mesh.triangles.push_back(Triangle(i*nX+j,i*nX+j+1,(i-1)*nX+j));
+            o_mesh.triangles.push_back(Triangle((i-1)*nX+j,i*nX+j+1,(i-1)*nX+j+1));*/
         }
     }
 }
