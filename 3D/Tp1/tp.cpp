@@ -409,11 +409,15 @@ void drawTriangleMesh( Mesh const & i_mesh ) {
 
                 Vec3 p2 = i_mesh.vertices[i_mesh.triangles[tIt][2]];
                 Vec3 n2 = i_mesh.normals[i_mesh.triangles[tIt][2]];
-
+                glColor3f( n0[0], n0[1], n0[2] );
                 glNormal3f( n0[0] , n0[1] , n0[2] );
                 glVertex3f( p0[0] , p0[1] , p0[2] );
+
+                glColor3f( n1[0], n1[1], n1[2] );
                 glNormal3f( n1[0] , n1[1] , n1[2] );
                 glVertex3f( p1[0] , p1[1] , p1[2] );
+
+                glColor3f( n2[0], n2[1], n2[2] );
                 glNormal3f( n2[0] , n2[1] , n2[2] );
                 glVertex3f( p2[0] , p2[1] , p2[2] );
             }
@@ -427,8 +431,13 @@ void drawTriangleMesh( Mesh const & i_mesh ) {
                 Vec3 p2 = i_mesh.vertices[i_mesh.triangles[tIt][2]];
 
                 //Dessin des trois sommets formant le triangle
+                glColor3f( p0[0], p0[1], p0[2] );
                 glVertex3f( p0[0] , p0[1] , p0[2] );
+
+                glColor3f( p1[0], p1[1], p1[2] );
                 glVertex3f( p1[0] , p1[1] , p1[2] );
+
+                glColor3f( p2[0], p2[1], p2[2] );
                 glVertex3f( p2[0] , p2[1] , p2[2] );
             }
             glEnd();
