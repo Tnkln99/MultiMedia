@@ -125,79 +125,110 @@ void setUnitSphere( Mesh & o_mesh, int nX = 20, int nY=20 )
             if(i == nY -1){
                 o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, j));
                 o_mesh.triangles.push_back(Triangle(j+1, j, i*nY+j+1));
+
+                //std::cout<<"if T1 C1 :"<< i*nY+j << "T1 C2: "<< i*nY+j+1 << "T1 C3: "<<j<<" i: "<<i<<" j: "<<j<<std::endl;
+                //std::cout<<"if T2 C1 :"<< j + 1<< "T2 C2: "<< j << "T2 C3: "<<i*nY+j+1<<"i: "<<i<<"j: "<<j<<std::endl;
             }else{
                 o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, (i+1)*nY+j));
                 o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
+
+                //std::cout<<"T1 C1 :"<< i*nY+j << "T1 C2: "<< i*nY+j+1 << "T1 C3: "<<(i+1)*nY+j<<" i: "<<i<<" j: "<<j<<std::endl;
+                //std::cout<<"T2 C1 :"<< (i+1)*nY+j+1 << "T2 C2: "<< (i+1)*nY+j << "T2 C3: "<<i*nY+j+1<<"i: "<<i<<"j: "<<j<<std::endl;
             }
-            
         }
     }
+    //std::cout<<"nombre vertices : "<<o_mesh.vertices.size()<<std::endl;
 }
 
-void setUnitCube( Mesh & o_mesh, int nX = 20, int nY=20 )
+void setUnitCube( Mesh & o_mesh, int nX = 5, int nY=5)
 {
     o_mesh.vertices.clear();
     o_mesh.triangles.clear();
-    //o_mesh.normals.clear();
+
+    o_mesh.vertices.push_back(Vec3(0,0,0));
+    o_mesh.vertices.push_back(Vec3(0,0,1));
+    o_mesh.vertices.push_back(Vec3(0,1,0));
+    o_mesh.vertices.push_back(Vec3(0,1,1));
+    o_mesh.vertices.push_back(Vec3(1,0,0));
+    o_mesh.vertices.push_back(Vec3(1,0,1));
+    o_mesh.vertices.push_back(Vec3(1,1,0));
+    o_mesh.vertices.push_back(Vec3(1,1,1));
+
+    o_mesh.triangles.push_back(Triangle(0,1,2));
+    o_mesh.triangles.push_back(Triangle(2,1,3));
+    o_mesh.triangles.push_back(Triangle(3,1,5));
+    o_mesh.triangles.push_back(Triangle(3,5,7));
+    o_mesh.triangles.push_back(Triangle(7,5,6));
+    o_mesh.triangles.push_back(Triangle(6,5,4));
+    o_mesh.triangles.push_back(Triangle(7,6,3));
+    o_mesh.triangles.push_back(Triangle(2,3,6));
+    o_mesh.triangles.push_back(Triangle(2,6,0));
+    o_mesh.triangles.push_back(Triangle(6,4,0));
+    o_mesh.triangles.push_back(Triangle(0,4,1));
+    o_mesh.triangles.push_back(Triangle(4,5,1));
+
+
     
+    //o_mesh.normals.clear();
+
+    /*
+    //pour y = Nx
+    for(float i = 0; i < nX+1; i ++){
+        for(float j = 0; j < nX+1; j ++){
+            o_mesh.vertices.push_back(Vec3(i/nX,1,j/nX));
+        }
+    }
+
+     // pour z = nX
+    for(float i = 0; i < nX+1; i ++){
+        for(float j = 0; j < nX+1; j ++){
+            o_mesh.vertices.push_back(Vec3(j/nX,i/nX,1));
+        }
+    }
+    
+    // pour x = nX
+    for(float i = 0; i < nX+1; i ++){
+        for(float j = 0; j < nX+1; j ++){
+            o_mesh.vertices.push_back(Vec3(1,j/nX,i/nX));
+        }
+    }
+
     // pour x = 0 
     for(float i = 0; i < nX+1; i ++){
         for(float j = 0; j < nX+1; j ++){
             o_mesh.vertices.push_back(Vec3(0,i/nX,j/nX));
-            //o_mesh.normals.push_back(Vec3(0,i/nX,j/nX));
+        }
+    }
+
+
+    //pour y = 0
+    for(float i = 0; i < nX+1; i ++){
+        for(float j = 0; j < nX+1; j ++){
+            o_mesh.vertices.push_back(Vec3(j/nX,0,i/nX));
         }
     }
 
     // pour z = 0 
     for(float i = 0; i < nX+1; i ++){
         for(float j = 0; j < nX+1; j ++){
-            o_mesh.vertices.push_back(Vec3(i/nX,j/nX,0));
-            //o_mesh.normals.push_back(Vec3(i/nX,j/nX,0));
+            o_mesh.vertices.push_back(Vec3(j/nX,i/nX,0));
         }
     }
 
-    //pour y = 0
-    for(float i = 0; i < nX+1; i ++){
-        for(float j = 0; j < nX+1; j ++){
-            o_mesh.vertices.push_back(Vec3(i/nX,0,j/nX));
-            //o_mesh.normals.push_back(Vec3(i/nX,0,j/nX));
-        }
-    }
-
-    // pour z = nX
-    for(float i = 0; i < nX+1; i ++){
-        for(float j = 0; j < nX+1; j ++){
-            o_mesh.vertices.push_back(Vec3(i/nX,j/nX,1));
-            //o_mesh.normals.push_back(Vec3(i/nX,j/nX,1));
-        }
-    }
-
-    //pour y = Nx
-    for(float i = 0; i < nX+1; i ++){
-        for(float j = 0; j < nX+1; j ++){
-            o_mesh.vertices.push_back(Vec3(i/nX,1,j/nX));
-            //o_mesh.normals.push_back(Vec3(i/nX,1,j/nX));
-        }
-    }
-
-    // pour x = nX
-    for(float i = 0; i < nX+1; i ++){
-        for(float j = 0; j < nX+1; j ++){
-            o_mesh.vertices.push_back(Vec3(1,i/nX,j/nX));
-            //o_mesh.normals.push_back(Vec3(1,i/nX,j/nX));
-        }
-    }
+    std::cout<<"nombre vertices : "<<o_mesh.vertices.size()<<std::endl;
     
-    //triangles pour cete face
-    for(int i = 0; i < 6*(nX+1); i ++){
-        for(int j = 0; j < 6*(nX+1); j ++){
-            if( (i % (nX+1) == nX)  || (j % (nX-1) == 0)){
-                continue;
+    
+    for(int i = 0; i < (nX+1)*6; i ++){
+        for(int j = 0; j < (nX+1)*6; j ++){
+            if( (i % (nX+1) == nX)  || (j % (nX+1) == nX)){
+                o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, j));
+                //o_mesh.triangles.push_back(Triangle(j+1, j, i*nY+j+1));
             }
+            
             o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, (i+1)*nY+j));
-            o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
+            //o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
         }
-    }
+    }*/
 }
 
 void setUnitTore( Mesh & o_mesh, int nX = 50, int nY= 50 ){
@@ -215,26 +246,37 @@ void setUnitTore( Mesh & o_mesh, int nX = 50, int nY= 50 ){
         }
     }
 
-    for(int i = 0; i < nX+1; i++){
+    for(int i = 0; i < nX; i++){
         for(int j = 0; j < nY; j++){
-            /*if (j == nX -1){
-                //o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, j));
-                //o_mesh.triangles.push_back(Triangle(j+1, j, i*nY+j+1));
-            }*/
-            if(i == nY - 1){
+            if (j == nY-1 && i == nY-1){
+                o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY, j));
+                o_mesh.triangles.push_back(Triangle(i*nY, j+1, i));
+
+                //std::cout<<"if T1 C1 :"<< i*nY << "T1 C2: "<< 48 << "T1 C3: "<< i <<" i: "<<i<<" j: "<<j<<std::endl;
+            }
+            else if (j == nY-1){
+                o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY, (i+1)*nY+j));
+                o_mesh.triangles.push_back(Triangle((i+1)*nY, (i+1)*nY+j, i*nY));
+
+                //std::cout<<"else if1 T1 C1 :"<< i*nY+j << "T1 C2: "<< i*nY+1 << "T1 C3: "<<(i+1)*nY+j<<" i: "<<i<<" j: "<<j<<std::endl;
+            }
+            else if(i == nY-1){
                 o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, j));
                 o_mesh.triangles.push_back(Triangle(j+1, j, i*nY+j+1));
-                std::cout<<"else if T1 C1 :"<< i*nY+j << "T1 C2: "<< i*nY+j+1 << "T1 C3: "<<j<<"i: "<<i<<"j: "<<j<<std::endl;
-                std::cout<<"else if T2 C1 :"<< j+1 << "T2 C2: "<< j << "T2 C3: "<<i*nY+j+1<<"i: "<<i<<"j: "<<j<<std::endl;
+                
+                
+                //std::cout<<"else if T1 C1 :"<< i*nY+j << "T1 C2: "<< i*nY+j+1 << "T1 C3: "<< j<<" i: "<<i<<" j: "<<j<<std::endl;
+                //std::cout<<"if T2 C1 :"<< j + 1<< "T2 C2: "<< j << "T2 C3: "<<i*nY+j+1<<"i: "<<i<<"j: "<<j<<std::endl;
             }else{
                 o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, (i+1)*nY+j));
                 o_mesh.triangles.push_back(Triangle((i+1)*nY+j+1, (i+1)*nY+j, i*nY+j+1));
-                std::cout<<"T1 C1 :"<< i*nY+j << "T1 C2: "<< i*nY+j+1 << "T1 C3: "<<(i+1)*nY+j<<"i: "<<i<<"j: "<<j<<std::endl;
-                std::cout<<"T2 C1 :"<< (i+1)*nY+j+1 << "T2 C2: "<< (i+1)*nY+j << "T2 C3: "<<i*nY+j+1<<"i: "<<i<<"j: "<<j<<std::endl;
+                
+                //std::cout<<"T1 C1 :"<< i*nY+j << "T1 C2: "<< i*nY+j+1 << "T1 C3: "<<(i+1)*nY+j<<" i: "<<i<<" j: "<<j<<std::endl;
+                //std::cout<<"T2 C1 :"<< (i+1)*nY+j+1 << "T2 C2: "<< (i+1)*nY+j << "T2 C3: "<<i*nY+j+1<<"i: "<<i<<"j: "<<j<<std::endl;
             }
         }
     }
-    std::cout<<"nombre vertices : "<<o_mesh.vertices.size()<<std::endl;
+    //std::cout<<"nombre vertices : "<<o_mesh.vertices.size()<<std::endl;
 }
 
 
@@ -278,7 +320,7 @@ void setUnitSuperShape ( Mesh & o_mesh, int nX = 50, int nY= 50, float z = sin(z
             float r2 = supershape(phi, m, n1, n2, n3);
 
             o_mesh.vertices.push_back(Vec3(D * r1*std::cos(teta)*r2*std::cos(phi), D * r1*std::sin(teta)*r2*std::cos(phi), D * r2*std::sin(phi)));
-            //o_mesh.normals.push_back(Vec3(std::cos(teta)*std::cos(phi), std::sin(teta)*std::cos(phi), std::sin(phi)));
+            o_mesh.normals.push_back(Vec3(std::cos(teta)*std::cos(phi), std::sin(teta)*std::cos(phi), std::sin(phi)));
         }
     }
 
@@ -618,7 +660,6 @@ void display() {
     glutSwapBuffers ();
     zaman = 0.5 + zaman;
     globalSuper = sin(zaman);
-    setUnitSuperShape( unit_super_shape);
 }
 
 void idle () {
@@ -772,9 +813,9 @@ int main (int argc, char ** argv) {
     //Uncomment to see other meshes
     //openOFF("data/elephant_n.off", mesh.vertices, mesh.normals, mesh.triangles);
     setUnitSphere( unit_sphere , nX, nY);
-    setUnitCube( unit_cube, nX, nY);
+    setUnitCube( unit_cube );
     setUnitTore( unit_tore );
-    //setUnitSuperShape( unit_super_shape);
+    setUnitSuperShape( unit_super_shape);
     
     
     glutMainLoop ();
