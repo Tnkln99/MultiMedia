@@ -29,24 +29,30 @@ varying vec4 p;
 varying vec3 n;
 
 void main (void) {
-     vec3 P = vec3 (gl_ModelViewMatrix * p); //Position du point à éclairer
-     vec3 N = normalize (gl_NormalMatrix * n); //Normal en ce point
-     vec3 V = normalize (-P); //Vecteur de vue
-      
-    vec4 lightContribution = ambientRef * gl_LightModel.ambient*gl_FrontMaterial.ambient ;
+    vec3 P = vec3 (gl_ModelViewMatrix * p); //Position du point à éclairer
+    vec3 N = normalize (gl_NormalMatrix * n); //Normal en ce point
+    vec3 V = normalize (-P); //Vecteur de vue
+    
+    vec4 refAmb = ambientRef * gl_LightModel.ambient*gl_FrontMaterial.ambient ;
+    vec4 lightContribution;
+
     for(int i = 0; i < 3; i++){
         vec3 L = P - gl_LightSource[i].position.xyz; //Vecteur de la lumière
         vec3 R = 2*dot(N,L)*N - L; //Vecteur de réflexion
-        vec4 lightContributionD = diffuseRef * gl_LightSource[i].diffuse*gl_FrontMaterial.diffuse*max(dot(normalize(L),N),0.0);
-        /*if (max(dot(normalize(L),N),0.0) > 0.5)//pour cartoonish look
-            lightContributionD = vec4(1.0,1.0,1.0,1.0);
-        else if (max(dot(normalize(L),N),0.0) > 0.0)
-            lightContributionD = vec4(0.33,0.33,0.33,1.0);
-        else
-            lightContributionD = vec4(0.0,0.0,0.0,1.0);*/
+        vec4 refDiff = diffuseRef * gl_LightSource[i].diffuse*gl_FrontMaterial.diffuse*max(dot(normalize(L),N),0.0);
+        float toonShading;
+        if (max(dot(normalize(L),N),0.0) > 0.5)//pour cartoonish look
+            toonShading = 1.0;
+        else if (max(dot(normalize(L),N),0.0) > 0.3)
+            toonShading = 0.5;
+        else if ((max(dot(normalize(L),N),0.0) > 0.0))
+            toonShading = 0.33;
+        else 
+            toonShading = 0.1;
         
-        vec4 lightContributionS = specRef * gl_LightSource[i].specular*gl_FrontMaterial.specular*max(dot(normalize(R),N),0.0);
-        lightContribution = lightContribution + lightContributionD + lightContributionS;
+        vec4 refSpec = specRef * gl_LightSource[i].specular*gl_FrontMaterial.specular*pow(max(dot(normalize(R),V),0.0),shininess);
+
+        lightContribution += (refAmb + refDiff + refSpec);//*toonShading; //add color coeff for Toon Shading
     }
     
     ////////////////////////////////////////////////
@@ -58,7 +64,44 @@ void main (void) {
     // gl_FrontMaterial.diffuse Matériaux diffus de l'objet
     // gl_FrontMaterial.specular Matériaux speculaire de l'objet
 
-    gl_FragColor =vec4 (lightContribution.xyz, 1);
+    //Pour rouge 
+    float rouge = lightContribution.r; 
+    if (rouge > 0.666){
+        rouge = 1.0;
+    }
+    else if (rouge > 0.333){
+        rouge = 0.666;
+    }
+    else{
+        rouge = 0.333;
+    }
+    //Pour vert
+    float green = lightContribution.y;
+    if (green > 0.666){
+        green = 1.0;
+    }
+    else if (green > 0.333){
+        green = 0.666;
+    }
+    else{
+        green = 0.333;
+    }
+    //Pour bleu 
+    float blue = lightContribution.z;
+    if (blue > 0.666){
+        blue = 1.0;
+    }
+    else if (blue > 0.333){
+        blue = 0.666;
+    }
+    else{
+        blue = 0.333;
+    }
+
+    
+
+    gl_FragColor =vec4 (rouge,blue,green, 1.0);
+    //gl_FragColor =vec4(lightContribution.xyz,1.0);
     
 }
  

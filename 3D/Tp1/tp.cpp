@@ -122,7 +122,7 @@ void setUnitSphere( Mesh & o_mesh, int nX = 20, int nY=20 )
 
     for(int i=0; i < nX ; i++){
         for(int j=0; j < nY-1; j++){
-            if(i == nY -1){
+            if(i == nX -1){
                 o_mesh.triangles.push_back(Triangle(i*nY+j, i*nY+j+1, j));
                 o_mesh.triangles.push_back(Triangle(j+1, j, i*nY+j+1));
 
@@ -243,6 +243,7 @@ void setUnitTore( Mesh & o_mesh, int nX = 50, int nY= 50 ){
             float P = angleChqEtp * j;
 
             o_mesh.vertices.push_back(Vec3((R + r*cos(Q))*cos(P), (R + r*cos(Q))*sin(P), r*sin(Q)));
+            o_mesh.normals.push_back(Vec3((R + r*cos(Q))*cos(P), (R + r*cos(Q))*sin(P), r*sin(Q)));
         }
     }
 
@@ -320,7 +321,7 @@ void setUnitSuperShape ( Mesh & o_mesh, int nX = 50, int nY= 50, float z = sin(z
             float r2 = supershape(phi, m, n1, n2, n3);
 
             o_mesh.vertices.push_back(Vec3(D * r1*std::cos(teta)*r2*std::cos(phi), D * r1*std::sin(teta)*r2*std::cos(phi), D * r2*std::sin(phi)));
-            o_mesh.normals.push_back(Vec3(std::cos(teta)*std::cos(phi), std::sin(teta)*std::cos(phi), std::sin(phi)));
+            //o_mesh.normals.push_back(Vec3(std::cos(teta)*std::cos(phi), std::sin(teta)*std::cos(phi), std::sin(phi)));
         }
     }
 
