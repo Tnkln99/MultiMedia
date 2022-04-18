@@ -60,6 +60,10 @@ public:
     void setShininess (float s) {
         glUniform1fARB (shininessLocation, s);
     }
+
+    void setTime (float s) {
+        glUniform1fARB (timeLocation, s);
+    }
     
 private:
     void init (const std::string & vertexShaderFilename,
@@ -70,11 +74,13 @@ private:
         diffuseRefLocation = getUniLoc ("diffuseRef");
         specRefLocation = getUniLoc ("specRef");
         shininessLocation = getUniLoc ("shininess");
+        timeLocation = getUniLoc("time");
     }
     GLint ambientRefLocation;
     GLint diffuseRefLocation;
     GLint specRefLocation;
     GLint shininessLocation;
+    GLint timeLocation;
 };
 
 static GLint window;
@@ -349,7 +355,7 @@ void idle () {
                      numOfTriangles, FPS);
         glutSetWindowTitle (FPSstr);
         lastTime = currentTime;
-
+        phongShader->setTime(glutGet((GLenum)GLUT_ELAPSED_TIME));
     }
     glutPostRedisplay ();
 }
@@ -495,6 +501,7 @@ void usage () {
 
 
 int main (int argc, char ** argv) {
+    //std::cout<<2/3.000<<std::endl;
     glutInit (&argc, argv);
     glutInitDisplayMode (GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
     glutInitWindowSize (SCREENWIDTH, SCREENHEIGHT);
