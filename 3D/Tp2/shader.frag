@@ -123,9 +123,9 @@ void main (void) {
     vec3 P = vec3 (gl_ModelViewMatrix * p); //Position du point à éclairer
     vec3 N = normalize (gl_NormalMatrix * n); //Normal en ce point
     vec3 V = normalize (-P); //Vecteur de vue
-    float timeIntervale = sin(time);
+    float timeIntervale = cos(time);
 
-    float coeffBruit = 100.00; 
+    float coeffBruit = 5.00; 
     vec3 fragment = coeffBruit * P;
     vec3 monRandomVec = fbm3ToVec3(fragment);
     //N += monRandomVec;  // decommenter pour faire de bruit
@@ -136,7 +136,7 @@ void main (void) {
                                 0,0,0,1};*/
     
     vec4 refAmb = ambientRef * gl_LightModel.ambient*gl_FrontMaterial.ambient ;
-    vec4 lightContribution = refAmb;
+    vec4 lightContribution;
     for(int i = 0; i < 1; i++){
         vec3 L = normalize(gl_LightSource[i].position.xyz - P); //Vecteur de la lumière
         vec3 R = 2.00*dot(N,L)*N - L; //Vecteur de réflexion
@@ -158,7 +158,7 @@ void main (void) {
         
         vec4 refSpec = specRef * gl_LightSource[i].specular * gl_FrontMaterial.specular * pow(max(dot(R,V),0.0),shininess);
 
-        lightContribution += (refAmb + refDiff + refSpec);// * toonShading * timeIntervale;// //add color coeff for Toon Shading
+        lightContribution += (refAmb + refDiff + refSpec);// * toonShading;// * timeIntervale;// //add color coeff for Toon Shading
     }
     
     ////////////////////////////////////////////////
@@ -175,33 +175,33 @@ void main (void) {
     float green = lightContribution.y;
     float blue = lightContribution.z;
 
-    double nombreSeuillage = 2.000;
+    double nombreSeuillage = 5.000;
 
     int aChangeR = 0;
     int aChangeB = 0;
     int aChangeG = 0;
 
-    for(int i = 1;i < nombreSeuillage;i++){    
+    for(int i = 0;i < nombreSeuillage;i++){    
         if(lightContribution.r > i/nombreSeuillage && lightContribution.r < (i+1)/nombreSeuillage){
             rouge = (i+1)/nombreSeuillage;
-            aChangeR = 1;
+            //aChangeR = 1;
         }
         if(lightContribution.b > i/nombreSeuillage && lightContribution.b < (i+1)/nombreSeuillage){
             blue = (i+1)/nombreSeuillage;
-            aChangeB = 1;
+            //aChangeB = 1;
         }
         if(lightContribution.g > i/nombreSeuillage && lightContribution.g < (i+1)/nombreSeuillage){
             green = (i+1)/nombreSeuillage;
-            aChangeG = 1;
+            //aChangeG = 1;
         }
     }
     //pour les cas else donc lightcontr.r,g,b <= 1/nombreSeuillage
-    if (!aChangeR)
+    /*if (!aChangeR)
         rouge = 1/nombreSeuillage;
     if (!aChangeB)
         blue = 1/nombreSeuillage;
     if  (!aChangeG)
-        green = 1/nombreSeuillage;
+        green = 1/nombreSeuillage;*/
     gl_FragColor =vec4(rouge , green , blue , 1.0);
     //gl_FragColor =vec4(lightContribution.xyz,1.0);
     
