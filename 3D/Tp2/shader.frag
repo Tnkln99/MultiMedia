@@ -136,12 +136,14 @@ void main (void) {
                                 0,0,0,1};*/
     
     vec4 refAmb = ambientRef * gl_LightModel.ambient*gl_FrontMaterial.ambient ;
-    vec4 lightContribution;
+    vec4 lightContribution = refAmb;
     for(int i = 0; i < 1; i++){
+        
         vec3 L = normalize(gl_LightSource[i].position.xyz - P); //Vecteur de la lumière
         vec3 R = 2.00*dot(N,L)*N - L; //Vecteur de réflexion
 
         vec4 refDiff = diffuseRef * gl_LightSource[i].diffuse * gl_FrontMaterial.diffuse * max( dot(L,N) ,0.0);
+        vec4 refSpec = specRef * gl_LightSource[i].specular * gl_FrontMaterial.specular * pow(max(dot(R,V),0.0),shininess);
 
         
         float toonShading;
@@ -155,10 +157,10 @@ void main (void) {
         else 
             toonShading = 0.1;
         
-        
-        vec4 refSpec = specRef * gl_LightSource[i].specular * gl_FrontMaterial.specular * pow(max(dot(R,V),0.0),shininess);
-
-        lightContribution += (refAmb + refDiff + refSpec);// * toonShading;// * timeIntervale;// //add color coeff for Toon Shading
+        if (i == 0)
+            lightContribution += (refDiff + refSpec);// * toonShading;// * timeIntervale;// //add color coeff for Toon Shading
+        else 
+            lightContribution +=  (refAmb + refDiff + refSpec);// * toonShading;// * timeIntervale;// //add color coeff for Toon Shading
     }
     
     ////////////////////////////////////////////////
@@ -175,7 +177,7 @@ void main (void) {
     float green = lightContribution.y;
     float blue = lightContribution.z;
 
-    double nombreSeuillage = 5.000;
+    double nombreSeuillage = 2.000;
 
     int aChangeR = 0;
     int aChangeB = 0;
@@ -202,8 +204,8 @@ void main (void) {
         blue = 1/nombreSeuillage;
     if  (!aChangeG)
         green = 1/nombreSeuillage;*/
-    gl_FragColor =vec4(rouge , green , blue , 1.0);
-    //gl_FragColor =vec4(lightContribution.xyz,1.0);
+    //gl_FragColor =vec4(rouge , green , blue , 1.0);
+    gl_FragColor =vec4(lightContribution.xyz,1.0);
     
 }
  
