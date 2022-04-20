@@ -340,7 +340,7 @@ void display () {
 void idle () {
     static float lastTime = glutGet ((GLenum)GLUT_ELAPSED_TIME);
     float anotherTime = glutGet ((GLenum)GLUT_ELAPSED_TIME);
-    if (anotherTime - lastTime >= 400.0f) {
+    if (anotherTime - lastTime >= 10.0f) {
         phongShader->setTime(glutGet((GLenum)GLUT_ELAPSED_TIME));
         lastTime = anotherTime;
     }
